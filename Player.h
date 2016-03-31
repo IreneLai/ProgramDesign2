@@ -2,14 +2,10 @@
 class Player
 {
 public:
-    int getMoney()const
-    {
-        return money_;
-    }
+    Player (){}
+    Player(std::string name_,int money_,int time_):name(name_),money(money_),time(time_){}
+    ~Player(){}
     std::string name;
-
-private:
-    int money_=0;
-
-
+    int money=100;
+    int time=0;
 };

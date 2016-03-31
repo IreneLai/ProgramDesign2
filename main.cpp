@@ -1,128 +1,76 @@
-#include<iostream>
-#include<Windows.h>
-#include<MMSystem.h>
-#include<string>
-#include <sstream>
-#include <stdio.h>
 #include<time.h>
-#include"Player.h"
-#include"Map.h"
 #include"Game.h"
 using namespace std;
-//function prototypes
-void ClearScreen(const string &ch);
-//define menu system enum
-enum MenuSystem
-{
-    SHOWMENU,MOVECURSOR,EXITPROGRAM //0,1,2
-};
-void Start(Map &map,const Player &player,Game &game,const int mapCount)
-{
-     map.SetColor(14,0);
-    time_t t = time(0);
-    map.SetCursorPosition(41,3);
-    cout<<"﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏";
-    map.SetCursorPosition(40,4);
-    cout<<"│";
-    map.SetCursorPosition(40,5);
-    cout<<"│";
-    map.SetCursorPosition(41,6);
-    cout<<"﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋";
-    map.SetCursorPosition(66,4);
-    cout<<"│";
-    map.SetCursorPosition(66,5);
-    cout<<"│";
-    map.SetCursorPosition(0,0);
-    char tmp[64];
-    map.SetCursorPosition(36,0);
-    cout<<"開始時間 :";
-    strftime( tmp, sizeof(tmp), "%Y/%m/%d %X %A",localtime(&t) );
-    puts( tmp );
-    map.SetCursorPosition(36,1);
-    cout<<"[玩家] "<<player.name<<endl;
-    map.SetCursorPosition(36,2);
-    cout<<"[目標]"<<" "<<game.GetGamePurpose(mapCount)<<endl;
-    map.SetColor(12,0);
-}
 int main()
 {
-    /*SetCursorPosition(20,3);
-    cout<< "[20,3]";*/
-    //ClearScreen("#");
-
     Player player;
     Map map;
     Game game;
-    cout<<"Choose"<<endl;
-    int c=0,t=1;
-    string str[3]= {"START NEW GAME","RECORD","EXIT"};
-
-    while(GetAsyncKeyState(VK_RETURN)==0)
+    //START_OptionMenu
+    int option=game.Option();
+    if(option==0)
     {
-        if(GetAsyncKeyState(VK_UP)!=0)
-        {
-            if(c==0)c=2;
-            else c--;
-
-        }
-        if(GetAsyncKeyState(VK_DOWN)!=0)
-        {
-            if(c==2)c=0;
-            else c++;
-        }
-        for(int i=0; i<3; ++i)
-        {
-            map.SetCursorPosition(5,13+i*2);
-            if(i==c)
-            {
-                map.SetColor(12,5);
-                cout<<str[i];
-                map.SetColor(0,0);
-
-            }
-            else
-            {
-                map.SetColor(7,0);
-                cout<<str[i];
-                map.SetColor(0,0);
-            }
-
-        }
-        system("pause>nul");
+        map.SetColor(0,10);
+        map.SetCursorPosition(10,5);
+        cout<<"遊戲規則";
+        map.SetColor(10,0);
+        map.SetCursorPosition(10,7);
+        cout<<"(1) 不要放過遊戲中的任何蛛絲馬跡";
+        map.SetCursorPosition(10,8);
+        cout<<"(2) 移動：方向鍵 ↑ ↓ ← → 控制";
+        map.SetCursorPosition(10,9);
+        cout<<"(3) 玩家狀態請按 [Enter]，內容包括金錢、花費時間";
+        map.SetCursorPosition(10,10);
+        cout<<"    可進行存檔、地圖更換、道具查看等等...";
+        //Print name
+        map.SetColor(11,0);
+        map.SetCursorPosition(10,12);
+        cout<<"請輸入姓名...>";
+        cin>>game.player.name;
     }
+    else if(option==1)
+    {
+        map.SetCursorPosition(10,5);
+        cout<<"RECORD";
+        map.SetCursorPosition(10,6);
+        cout<<"Choose the record...>";
+        int record=0;
+        cin>>record;
+    }
+    else exit(1);
+    map.SetCursorPosition(15,15);
+    system("pause");
     system("cls");
-    map.SetColor(12,0);
-     cout<<"Print your name...>";
-    cin>>player.name;
-    system("cls");
-
-
-
+    map.SetColor(7,0);
+    //Start clock
     clock();
     bool GameRun = true;
-    map.mapNum=0;
     int mapCount=1;
-    int getMap = map.GetMap(map.mapNum);
     map.Position(1,1);
-    int Mpos=0,Gpos=0;
+    int Gpos=0;
     queue<string> q;
-    int line=4;
-    Start(map,player,game,mapCount);
     map.SetCursorPosition(0,0);
-    map.PrintMap();
-    while(GameRun&&getMap)
+    game.Introduction();
+    char tmp[64];
+    time_t t = time(0);
+    map.SetCursorPosition(36,1);
+    cout<<"開始時間 :";
+    strftime( tmp, sizeof(tmp), "%Y/%m/%d %X %A",localtime(&t) );
+    puts( tmp );
+    map.SetCursorPosition(36,2);
+    cout<<"[玩家] "<<game.player.name<<endl;
+    map.SetCursorPosition(36,3);
+    cout<<"[目標] "<<"找到勞爾夏尼子爵";
+    map.SetCursorPosition(36,4);
+    cout<<"[位置] "<<game.MapName();
+    map.SetColor(12,0);
+    game.map.GetMap();
+    map.SetCursorPosition(0,0);
+    game.map.PrintMap();
+    game.BgMusic(game.map.mapNum);
+    while(GameRun)
     {
-        if(map.Keyboard()>0) Mpos=map.Keyboard(); //觸發關卡
-        if(Mpos==6 && map.GetMap(mapCount))  //換地圖
-        {
-            map.mapNum=Mpos;
-            map.Position(map.xPos,map.yPos);
-            Gpos=1;
-            Mpos=-1;
-            map.SetCursorPosition(0,0);
-            map.PrintMap();
-        }
-
+        game.map.Keyboard(); //觸發關卡
         if(Gpos)
         {
             cout<<endl;
@@ -132,54 +80,85 @@ int main()
             Gpos=0;
 
         }
-        if(!q.empty())
-        {
-            if(line==4)
-            {
-                map.SetCursorPosition(42,5);
-                cout<<"                       ";
-            }
-
-            map.SetCursorPosition(42,line);
-            cout<<q.front();
-
-            while(GetAsyncKeyState(VK_SHIFT)==0) {Sleep(1500);}
-            if(line==5)
-            {
-                map.SetCursorPosition(42,4);
-                cout<<"                       ";
-            }
-
-            line++;
-            if(line==6)line=4;
-            if(q.front()==q.back())
-            {
-                system("cls");
-            }
-            q.pop();
-            Start(map,player,game,mapCount);
-            map.SetCursorPosition(0,0);
-            map.PrintMap();
-        }
-        else
-        {
             map.SetCursorPosition(0,15);
             system("pause>nul");
+
+        GetAsyncKeyState(VK_RETURN);
+        if(GetAsyncKeyState(VK_RETURN)!=0)
+        {
+            system("cls");
+            int select=0;
+            while(select!=4)
+            {
+                switch(select)
+                {
+                case 1:
+
+                    break;
+                case 2:
+                    map.SetCursorPosition(0,5);
+                    cout<<"\t\t地圖選單"<<endl
+                        <<"\t\t1: 廣場 "<<endl
+                        <<"\t\t2: 東區白教堂"<<endl
+                        <<"\t\t3: 維多利亞音樂廳"<<endl
+                        <<"\t\t4: 酒吧"<<endl<<endl
+                        <<"\t\t請選擇地圖...>";
+                    cin>>game.map.mapNum;
+                    game.map.GetMap();
+                    game.BgMusic(game.map.mapNum);
+                    break;
+                case 3:
+                    break;
+                }
+                if(select!=0)
+                {
+                    map.SetCursorPosition(15,19);
+                    system("pause");
+                    system("cls");
+                }
+
+                map.SetCursorPosition(0,5);
+                cout<<"\t\t"<<game.player.name<<" 目錄"<<endl<<endl;
+                cout<<"\t\t※提示：遊戲當中長按 [空白鍵]能知道目前經過時間"<<endl<<endl;
+                cout<<"\t\t[選項]"<<endl<<endl
+                    <<"\t\t(1) 道具及情報箱 "<<endl
+                    <<"\t\t(2) 選擇地圖"<<endl
+                    <<"\t\t(3) 儲存檔案或離開遊戲"<<endl
+                    <<"\t\t(4) 離開選單"<<endl<<endl
+                    <<"\t\t輸入選擇項目...>";
+                cin>>select;
+                map.SetCursorPosition(15,19);
+                system("pause");
+                system("cls");
+            }
+            system("cls");
+            map.SetColor(14,0);
+            map.SetCursorPosition(36,1);
+            cout<<"開始時間 :";
+            strftime( tmp, sizeof(tmp), "%Y/%m/%d %X %A",localtime(&t) );
+            puts( tmp );
+            map.SetCursorPosition(36,2);
+            cout<<"[玩家] "<<game.player.name<<endl;
+            map.SetCursorPosition(36,3);
+            cout<<"[目標] "<<"找到勞爾夏尼子爵";
+            map.SetCursorPosition(36,4);
+            cout<<"[位置] "<<game.MapName();
+            map.SetCursorPosition(0,0);
+            game.map.PrintMap();
         }
+
         if(GetAsyncKeyState(VK_SPACE)!=0)
         {
             while(GetAsyncKeyState(VK_SPACE)!=0)
             {
-                map.SetCursorPosition(42,4);
+                map.SetCursorPosition(0,18);
                 int minute=clock()/CLOCKS_PER_SEC/60;
                 int second=clock()/CLOCKS_PER_SEC%60;
-                std::cout<<"已經過:"<<minute<<"分"<<second<<"秒"<<std::endl;
+                std::cout<<"已經過 : "<<minute<<" 分 "<<second<<" 秒 "<<std::endl;
                 Sleep(100);
             }
-            system("cls");
-            Start(map,player,game,mapCount);
-            map.SetCursorPosition(0,0);
-            map.PrintMap();
+            map.SetCursorPosition(0,18);
+            cout<<"                       ";
         }
     }
     cin.get();
