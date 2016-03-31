@@ -100,6 +100,87 @@ std::string Game::MapName()
     }
     return str;
 }
+int Game::GameLoad()
+{
+    fstream charfp;
+    charfp.open("Character.txt",fstream::in);
+    if(charfp)
+    {
+        while(getline(charfp,roles_[numChar_].name))
+        {
+            fstream cfp;
+            string tmp(roles_[numChar_].name);
+            tmp+=".txt";
+            cout<<tmp;
+            cfp.open(tmp.c_str(),fstream::in);
+            if(cfp)
+            {
+                string str;
+                while(getline(cfp,str))
+                {
+                    roles_[numChar_].word[roles_[numChar_].numWord]=str;
+                    roles_[numChar_].numWord++;
+                    //cout<<roles_[numChar_].numWord<<" * "<<roles_[numChar_].word[roles_[numChar_].numWord-1]<<endl;
+                }
+                cfp.close();
+            }
+            numChar_++;
+
+        }
+        charfp.close();
+        return 1;
+    }
+    return 0;
+}
+void Game::PrintRole()
+{
+    for(int i=0; i<numChar_; ++i)
+    {
+        cout<<roles_[i].name<<endl;
+        for(int j=0; j<roles_[i].numWord; ++j)
+        {
+            cout<<roles_[i].word[j]<<endl;
+        }
+    }
+}
+void Game::Role2Talk()
+{
+    if(roles_[1].numWord!=0)
+    {
+        int start=9;
+        int counttmp=start;
+        int tmpnum=rand()%roles_[1].numWord;
+        map.SetCursorPosition(35,start-2);
+        cout<<roles_[1].name;
+        map.SetCursorPosition(35,start);
+        for(int i=0;i<roles_[1].word[tmpnum].length();++i)
+        {
+            cout<<roles_[1].word[tmpnum][i];
+            if(i%35==0)
+            {
+                start++;
+                map.SetCursorPosition(35,start);
+            }
+        }
+        map.SetCursorPosition(35,start+2);
+        system("pause");
+        map.SetCursorPosition(35,counttmp-2);
+        cout<<"                              ";
+        for(int i=0;i<roles_[1].word[tmpnum].length();++i)
+        {
+            cout<<" ";
+            if(i%35==0)
+            {
+                counttmp++;
+                map.SetCursorPosition(35, counttmp);
+            }
+        }
+        map.SetCursorPosition(35,counttmp+2);
+        cout<<"                           ";
+    }
+
+
+}
 void Game::Sound(const std::string s )
 {
     std::string tmp=s+".wav";

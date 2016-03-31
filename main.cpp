@@ -38,6 +38,8 @@ int main()
         cin>>record;
     }
     else exit(1);
+    game.GameLoad();
+   // game.PrintRole();
     map.SetCursorPosition(15,15);
     system("pause");
     system("cls");
@@ -68,20 +70,16 @@ int main()
     map.SetCursorPosition(0,0);
     game.map.PrintMap();
     game.BgMusic(game.map.mapNum);
+    srand(time(NULL));
     while(GameRun)
     {
-        game.map.Keyboard(); //觸發關卡
-        if(Gpos)
+        int trigger=game.map.Keyboard();
+        if(trigger>=4&&trigger<=6)
         {
-            cout<<endl;
-            game.Trigger(mapCount,&q);
-            game.BgMusic(mapCount);
-            mapCount++;
-            Gpos=0;
-
+            game.Role2Talk();
         }
-            map.SetCursorPosition(0,15);
-            system("pause>nul");
+        map.SetCursorPosition(0,15);
+        system("pause>nul");
 
         GetAsyncKeyState(VK_RETURN);
         if(GetAsyncKeyState(VK_RETURN)!=0)
@@ -90,6 +88,7 @@ int main()
             int select=0;
             while(select!=4)
             {
+                map.SetColor(13,0);
                 switch(select)
                 {
                 case 1:
@@ -116,13 +115,13 @@ int main()
                     system("pause");
                     system("cls");
                 }
-
+                map.SetColor(6,0);
                 map.SetCursorPosition(0,5);
                 cout<<"\t\t"<<game.player.name<<" 目錄"<<endl<<endl;
                 cout<<"\t\t※提示：遊戲當中長按 [空白鍵]能知道目前經過時間"<<endl<<endl;
                 cout<<"\t\t[選項]"<<endl<<endl
                     <<"\t\t(1) 道具及情報箱 "<<endl
-                    <<"\t\t(2) 選擇地圖"<<endl
+                    <<"\t\t(2) 地圖移轉"<<endl
                     <<"\t\t(3) 儲存檔案或離開遊戲"<<endl
                     <<"\t\t(4) 離開選單"<<endl<<endl
                     <<"\t\t輸入選擇項目...>";

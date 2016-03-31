@@ -1,14 +1,14 @@
-Vendor 1
-Sherlock 1
+Vendor
+Sherlock
 Newspaper
 Neil
 Drink1
 Drink2
-Drink3
-Gypsy
 Persia
 Orphan
+Gypsy
 Lestrade
+Sherlock
 Christine
 CleaningStaff
 EndStory

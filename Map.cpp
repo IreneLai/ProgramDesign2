@@ -39,7 +39,7 @@ void Map::PrintMap()
         for(int j=0; j<mapCol_; ++j)
         {
             if(map_[i][j]==2) SetColor(15,0);
-            else if(map_[i][j]>=4&&map_[i][j]<=6) SetColor(12,14);
+            else if((map_[i][j]>=4&&map_[i][j]<=6)||map_[i][j]==15) SetColor(12,14);
             else if(map_[i][j]==1) SetColor(13,0);
             else if(map_[i][j]>=65) SetColor(14,0);
             else if(map_[i][j]!=35&&map_[i][j]!=0) SetColor(7,0);
