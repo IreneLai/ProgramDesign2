@@ -127,9 +127,10 @@ void Game::PrintRole()
         }
     }
 }
-void Game::StoryLine_(int searchID,std::string Name,std::string str)
+bool Game::StoryLine_(int searchID,std::string Name,std::string str)
 {
-
+    return true;
+    return false;
 }
 void Game::Role2Talk_(int searchID,std::string Name)
 {
@@ -152,11 +153,11 @@ void Game::Role2Talk_(int searchID,std::string Name)
         }
         map.SetCursorPosition(35,start+2);
         char answer='\0';
-        cout<<"是否要與他對話？[Y/Enter(N)]...>";
-        cin.get(answer);
+        cout<<"是否要對話或答應他？[Y/Enter(N)]...>";
+        answer=getchar();
         string str;
         map.SetCursorPosition(35,start+3);
-        if(answer=='Y'){cout<<"輸入...>";cin>>str;getchar();StoryLine_(searchID,Name,str);}
+        if(answer=='Y'){if(StoryLine_(searchID,Name,str)){cout<<"輸入...>";cin>>str;getchar();}}
         map.SetCursorPosition(35,counttmp-2);
         cout<<"                              ";
         for(int i=0; i<roles_[searchID].word[tmpnum].length(); ++i)
@@ -165,14 +166,14 @@ void Game::Role2Talk_(int searchID,std::string Name)
             if(i%33==0)
             {
                 counttmp++;
-                cout<<" ";
+                cout<<"   ";
                 map.SetCursorPosition(35, counttmp);
             }
         }
         map.SetCursorPosition(35,counttmp+2);
-        cout<<"                                   ";
+        cout<<"                                             ";
         map.SetCursorPosition(35,counttmp+3);
-        cout<<"                                   ";
+        cout<<"                                             ";
     }
 }
 enum Location{NUL,SQUARE,CHURCH,CONCERTHALL,BAR,MAZE};
@@ -233,6 +234,9 @@ void Game::BgMusic(const int triggerNum)
         break;
     case 3:
         Sound("ThinkofMe");
+        break;
+    case 4:
+        Sound("Afterschool");
         break;
     }
 }

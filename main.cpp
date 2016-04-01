@@ -15,13 +15,13 @@ int main()
         cout<<"遊戲規則";
         map.SetColor(10,0);
         map.SetCursorPosition(10,7);
-        cout<<"(1) 不要放過遊戲中的任何蛛絲馬跡";
+        cout<<"(1) 不要放過遊戲中的任何蛛絲馬跡，尤其是地圖上的黃色符號";
         map.SetCursorPosition(10,8);
         cout<<"(2) 移動：方向鍵 ↑ ↓ ← → 控制";
         map.SetCursorPosition(10,9);
         cout<<"(3) 若金錢歸零，即輸了遊戲";
         map.SetCursorPosition(10,10);
-        cout<<"(4) 玩家狀態請按 [Enter]，內容包括金錢、花費時間";
+        cout<<"(4) 查看玩家狀態請按 [Enter]，內容包括金錢、花費時間";
         map.SetCursorPosition(10,11);
         cout<<"    可進行存檔、地圖更換、道具查看等等...";
         //Print name

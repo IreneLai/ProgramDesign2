@@ -35,7 +35,7 @@ private:
     Character roles_[20];
     int SearchID_(std::string name);
     void Role2Talk_(int searchID,std::string Name);
-    void StoryLine_(int searchID,std::string Name,std::string str);
+    bool StoryLine_(int searchID,std::string Name,std::string str);
 
 
 };
