@@ -58,25 +58,11 @@ void  Game::Introduction()
     map.SetCursorPosition(10,10);
     cout<<"廣場聽說有許多情報，幫我打聽，由衷感謝您的協助。";
     map.SetCursorPosition(10,12);
-    cout<<"                  Best,Lestrade. 12/7 Wes"<<endl<<endl;
+    cout<<"                  Best,雷斯垂德. 12/7 Wes"<<endl<<endl;
     map.SetCursorPosition(10,15);
     system("pause");
     system("cls");
     map.SetColor(14,0);
-    /*
-    map.SetCursorPosition(41,3);
-    cout<<"﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏";
-    map.SetCursorPosition(40,4);
-    cout<<"│";
-    map.SetCursorPosition(40,5);
-    cout<<"│";
-    map.SetCursorPosition(41,6);
-    cout<<"﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋";
-    map.SetCursorPosition(66,4);
-    cout<<"│";
-    map.SetCursorPosition(66,5);
-    cout<<"│";
-    map.SetCursorPosition(0,0);*/
 }
 std::string Game::MapName()
 {
@@ -93,7 +79,7 @@ std::string Game::MapName()
         str="維多利亞音樂廳";
         break;
     case 4:
-        str="酒吧";
+        str="尼爾酒吧";
         break;
     case 5:
         str="迷宮";
@@ -111,7 +97,6 @@ int Game::GameLoad()
             fstream cfp;
             string tmp(roles_[numChar_].name);
             tmp+=".txt";
-            cout<<tmp;
             cfp.open(tmp.c_str(),fstream::in);
             if(cfp)
             {
@@ -125,7 +110,6 @@ int Game::GameLoad()
                 cfp.close();
             }
             numChar_++;
-
         }
         charfp.close();
         return 1;
@@ -143,48 +127,99 @@ void Game::PrintRole()
         }
     }
 }
-void Game::Role2Talk()
+void Game::StoryLine_(int searchID,std::string Name,std::string str)
 {
-    if(roles_[1].numWord!=0)
+
+}
+void Game::Role2Talk_(int searchID,std::string Name)
+{
+    if(roles_[searchID].numWord!=0)
     {
         int start=9;
         int counttmp=start;
-        int tmpnum=rand()%roles_[1].numWord;
+        int tmpnum=rand()%roles_[searchID].numWord;
         map.SetCursorPosition(35,start-2);
-        cout<<roles_[1].name;
+        cout<<Name;
         map.SetCursorPosition(35,start);
-        for(int i=0;i<roles_[1].word[tmpnum].length();++i)
+        for(int i=0; i<roles_[searchID].word[tmpnum].length(); ++i)
         {
-            cout<<roles_[1].word[tmpnum][i];
-            if(i%35==0)
+            cout<<roles_[searchID].word[tmpnum][i];
+            if(i%33==0)
             {
                 start++;
                 map.SetCursorPosition(35,start);
             }
         }
         map.SetCursorPosition(35,start+2);
-        system("pause");
+        char answer='\0';
+        cout<<"是否要與他對話？[Y/Enter(N)]...>";
+        cin.get(answer);
+        string str;
+        map.SetCursorPosition(35,start+3);
+        if(answer=='Y'){cout<<"輸入...>";cin>>str;getchar();StoryLine_(searchID,Name,str);}
         map.SetCursorPosition(35,counttmp-2);
         cout<<"                              ";
-        for(int i=0;i<roles_[1].word[tmpnum].length();++i)
+        for(int i=0; i<roles_[searchID].word[tmpnum].length(); ++i)
         {
             cout<<" ";
-            if(i%35==0)
+            if(i%33==0)
             {
                 counttmp++;
+                cout<<" ";
                 map.SetCursorPosition(35, counttmp);
             }
         }
         map.SetCursorPosition(35,counttmp+2);
-        cout<<"                           ";
+        cout<<"                                   ";
+        map.SetCursorPosition(35,counttmp+3);
+        cout<<"                                   ";
     }
-
-
+}
+enum Location{NUL,SQUARE,CHURCH,CONCERTHALL,BAR,MAZE};
+void Game::RoleSearchDisplay(const int trigger)
+{
+    string roleName;
+    string Name;
+    switch(map.mapNum)
+    {
+    case SQUARE:
+        if(trigger==4) {roleName="Vendor";Name="蔬果攤販";}
+        else if(trigger==5) {roleName="Sherlock";Name="夏洛克福爾摩斯";}
+        else if(trigger==6) {roleName="Newspaper";Name="賣報小童";}
+        break;
+    case CHURCH:
+        if(trigger==4) {roleName="Orphan";Name="孤兒";}
+        else if(trigger==5) {roleName="Gypsy";Name="吉普賽人";}
+        else if(trigger==6) {roleName="Persia";Name="波斯人";}
+        else if(trigger==21) {roleName="Lestrade";Name="雷斯垂德警探";}
+        break;
+    case CONCERTHALL:
+        if(trigger>=49&&trigger<=54) {roleName="CleaningStaff";Name="包廂清潔工";}
+        else if(trigger==5) {roleName="Christine";Name="克莉絲汀";}
+        else if(trigger==14) {roleName="EndStory";Name="迷宮";}
+        break;
+    case BAR:
+        if(trigger==5) {roleName="Neil";Name="尼爾公爵";}
+        else if(trigger==6) {roleName="Drink";Name="酒客";}
+        break;
+    case MAZE:
+        break;
+    }
+    int searchID=SearchID_(roleName);
+    if(searchID>=0) Role2Talk_(searchID,Name);
+}
+int Game::SearchID_(std::string name)
+{
+    for(int i=0;i<numChar_;++i)
+    {
+        if(roles_[i].name==name) return i;
+    }
+    return -1;
 }
 void Game::Sound(const std::string s )
 {
     std::string tmp=s+".wav";
-    PlaySound(TEXT(tmp.c_str()),NULL,SND_ASYNC|SND_LOOP);//music player'
+    PlaySound(TEXT(tmp.c_str()),NULL,SND_ASYNC|SND_LOOP);//music player
 }
 void Game::BgMusic(const int triggerNum)
 {
@@ -195,6 +230,9 @@ void Game::BgMusic(const int triggerNum)
         break;
     case 2:
         Sound("Mahoutsukai");
+        break;
+    case 3:
+        Sound("ThinkofMe");
         break;
     }
 }
@@ -213,13 +251,5 @@ void Game::Trigger(const int triggerNum,std::queue<std::string> *q) const
             q->push(str);
         }
     }
-}
-std::string Game::GetTrigger()
-{
-    std::stringstream ss;
-    std::string s;
-    ss<<trigger_;
-    ss>>s;
-    return s;
 }
 

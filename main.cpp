@@ -19,14 +19,17 @@ int main()
         map.SetCursorPosition(10,8);
         cout<<"(2) 移動：方向鍵 ↑ ↓ ← → 控制";
         map.SetCursorPosition(10,9);
-        cout<<"(3) 玩家狀態請按 [Enter]，內容包括金錢、花費時間";
+        cout<<"(3) 若金錢歸零，即輸了遊戲";
         map.SetCursorPosition(10,10);
+        cout<<"(4) 玩家狀態請按 [Enter]，內容包括金錢、花費時間";
+        map.SetCursorPosition(10,11);
         cout<<"    可進行存檔、地圖更換、道具查看等等...";
         //Print name
         map.SetColor(11,0);
-        map.SetCursorPosition(10,12);
+        map.SetCursorPosition(10,13);
         cout<<"請輸入姓名...>";
         cin>>game.player.name;
+        getchar();
     }
     else if(option==1)
     {
@@ -36,20 +39,20 @@ int main()
         cout<<"Choose the record...>";
         int record=0;
         cin>>record;
+        getchar();
     }
     else exit(1);
-    game.GameLoad();
-   // game.PrintRole();
-    map.SetCursorPosition(15,15);
+    if(game.GameLoad()) cout<<"\n\t\t遊戲已下載完畢，即將開始...";
+    else exit(1);
+    // game.PrintRole();
+    map.SetCursorPosition(16,17);
     system("pause");
     system("cls");
     map.SetColor(7,0);
     //Start clock
     clock();
     bool GameRun = true;
-    int mapCount=1;
     map.Position(1,1);
-    int Gpos=0;
     queue<string> q;
     map.SetCursorPosition(0,0);
     game.Introduction();
@@ -74,10 +77,9 @@ int main()
     while(GameRun)
     {
         int trigger=game.map.Keyboard();
-        if(trigger>=4&&trigger<=6)
-        {
-            game.Role2Talk();
-        }
+
+        game.RoleSearchDisplay(trigger);
+
         map.SetCursorPosition(0,15);
         system("pause>nul");
 
@@ -85,47 +87,87 @@ int main()
         if(GetAsyncKeyState(VK_RETURN)!=0)
         {
             system("cls");
-            int select=0;
+            int select=0,mapSelect=0;
+            string makeSure;
             while(select!=4)
             {
                 map.SetColor(13,0);
+                map.SetCursorPosition(0,5);
                 switch(select)
                 {
                 case 1:
 
+                    cout<<"\t\t";
+                    map.SetColor(0,13);
+                    cout<<"[玩家資料]"<<endl<<endl;
+                    map.SetColor(13,0);
+                    cout<<"\t\t玩家 : "<<game.player.name<<endl
+                        <<"\t\t金錢 : "<<game.player.money<<" 英鎊"<<endl<<endl
+                        <<"\t\t";
+                    map.SetColor(0,13);
+                    cout<<"[道具箱]"<<endl<<endl;
+                    map.SetColor(13,0);
+                    cout<<"\t\t";
+                    map.SetColor(0,13);
+                    cout<<"[情報箱]"<<endl<<endl;
+                    map.SetColor(13,0);
+
+
                     break;
                 case 2:
-                    map.SetCursorPosition(0,5);
-                    cout<<"\t\t地圖選單"<<endl
+
+                    cout<<"\t\t[地圖選單]"<<endl<<endl
                         <<"\t\t1: 廣場 "<<endl
                         <<"\t\t2: 東區白教堂"<<endl
                         <<"\t\t3: 維多利亞音樂廳"<<endl
-                        <<"\t\t4: 酒吧"<<endl<<endl
+                        <<"\t\t4: 尼爾酒吧"<<endl<<endl
                         <<"\t\t請選擇地圖...>";
-                    cin>>game.map.mapNum;
+                    cin>>mapSelect;
+                    if(mapSelect==3)
+                    {
+                        cout<<"\n\t\t進音樂廳要付50英鎊，你要購票嗎？[Y/N]...>";
+                        cin>>makeSure;
+                        if(makeSure=="Y")
+                        {
+                            game.player.money-=50;
+                            game.map.mapNum=3;
+                        }
+                        else mapSelect=game.map.mapNum;
+                    }
+                    else game.map.mapNum=mapSelect;
                     game.map.GetMap();
                     game.BgMusic(game.map.mapNum);
                     break;
                 case 3:
+                    cout<<"\t\t";
+                    map.SetColor(0,13);
+                    cout<<"[存檔資料]"<<endl<<endl;
+                    map.SetColor(13,0);
+                    cout<<"\t\t玩家名稱 : "<<game.player.name<<endl
+                        <<"\t\t金錢 : "<<game.player.money<<endl
+                        <<"\t\t目前花費時間 : "<<clock()/CLOCKS_PER_SEC/60<<" 分 "<<clock()/CLOCKS_PER_SEC%60<<" 秒 "<<endl<<endl;
                     break;
                 }
                 if(select!=0)
                 {
-                    map.SetCursorPosition(15,19);
+                    cout<<"\n\t\t";
                     system("pause");
                     system("cls");
                 }
-                map.SetColor(6,0);
                 map.SetCursorPosition(0,5);
-                cout<<"\t\t"<<game.player.name<<" 目錄"<<endl<<endl;
+                cout<<"\t\t ";
+                map.SetColor(0,6);
+                cout<<"目錄"<<endl<<endl;
+                map.SetColor(6,0);
                 cout<<"\t\t※提示：遊戲當中長按 [空白鍵]能知道目前經過時間"<<endl<<endl;
                 cout<<"\t\t[選項]"<<endl<<endl
                     <<"\t\t(1) 道具及情報箱 "<<endl
                     <<"\t\t(2) 地圖移轉"<<endl
                     <<"\t\t(3) 儲存檔案或離開遊戲"<<endl
-                    <<"\t\t(4) 離開選單"<<endl<<endl
+                    <<"\t\t(4) 回到遊戲"<<endl<<endl
                     <<"\t\t輸入選擇項目...>";
                 cin>>select;
+                getchar();
                 map.SetCursorPosition(15,19);
                 system("pause");
                 system("cls");
@@ -153,10 +195,11 @@ int main()
                 map.SetCursorPosition(0,18);
                 int minute=clock()/CLOCKS_PER_SEC/60;
                 int second=clock()/CLOCKS_PER_SEC%60;
+                map.SetCursorPosition(3,18);
                 std::cout<<"已經過 : "<<minute<<" 分 "<<second<<" 秒 "<<std::endl;
                 Sleep(100);
             }
-            map.SetCursorPosition(0,18);
+            map.SetCursorPosition(3,18);
             cout<<"                       ";
         }
     }

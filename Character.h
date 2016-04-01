@@ -5,8 +5,8 @@
 struct Character
 {
     std::string name;
-    int numWord=0;//¬G¨Æ¥D½u»y¥y
-    std::string word[15];
+    int numWord=0;//
+    std::string word[50];
 };
 #endif // Character_H_
 

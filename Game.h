@@ -25,7 +25,7 @@ public:
     void BgMusic(const int triggerNum);
     void Trigger(const int triggerNum,std::queue<std::string> *q) const;
     std::string GetTrigger();
-    void Role2Talk();
+    void RoleSearchDisplay(const int trigger);
     Map map;
     Player player;
 private:
@@ -33,6 +33,9 @@ private:
     Player record_[10];//讀檔玩家紀錄，最多十筆
     int numChar_=0;
     Character roles_[20];
+    int SearchID_(std::string name);
+    void Role2Talk_(int searchID,std::string Name);
+    void StoryLine_(int searchID,std::string Name,std::string str);
 
 
 };

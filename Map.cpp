@@ -39,9 +39,9 @@ void Map::PrintMap()
         for(int j=0; j<mapCol_; ++j)
         {
             if(map_[i][j]==2) SetColor(15,0);
-            else if((map_[i][j]>=4&&map_[i][j]<=6)||map_[i][j]==15) SetColor(12,14);
+            else if((map_[i][j]>=4&&map_[i][j]<=6)||map_[i][j]==21) SetColor(12,14);
             else if(map_[i][j]==1) SetColor(13,0);
-            else if(map_[i][j]>=65) SetColor(14,0);
+            else if((map_[i][j]>=65)||(map_[i][j]>=49&&map_[i][j]<=57)) SetColor(14,0);
             else if(map_[i][j]!=35&&map_[i][j]!=0) SetColor(7,0);
             std::cout<<static_cast<char>(map_[i][j]);
             SetColor(mapNum,0);
@@ -68,10 +68,6 @@ bool Map::GetMap()
         return true;
     }
     return false;
-}
-void Map::ChooseMap()
-{
-
 }
 int Map::Keyboard()
 {
