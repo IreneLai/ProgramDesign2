@@ -65,7 +65,7 @@ int main()
     map.SetCursorPosition(36,2);
     cout<<"[玩家] "<<game.player.name<<endl;
     map.SetCursorPosition(36,3);
-    cout<<"[目標] "<<"找到勞爾夏尼子爵";
+    cout<<"[目標] "<<"1.賺錢、蒐集情報 2.找到勞爾夏尼子爵";
     map.SetCursorPosition(36,4);
     cout<<"[位置] "<<game.MapName();
     map.SetColor(12,0);
@@ -181,7 +181,7 @@ int main()
             map.SetCursorPosition(36,2);
             cout<<"[玩家] "<<game.player.name<<endl;
             map.SetCursorPosition(36,3);
-            cout<<"[目標] "<<"找到勞爾夏尼子爵";
+            cout<<"[目標] "<<"1.賺錢、蒐集情報 2.找到勞爾夏尼子爵";
             map.SetCursorPosition(36,4);
             cout<<"[位置] "<<game.MapName();
             map.SetCursorPosition(0,0);
