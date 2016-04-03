@@ -156,7 +156,7 @@ void Game::PrintStoryLine_(int id,std::string Name)
     }
 
 }
-bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)
+bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)//劇情
 {
     fstream fp;
     fp.open("Storyline.txt",fstream::in);
@@ -170,7 +170,7 @@ bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)
             count++;
         }
         fp.close();
-        if(roles_[searchID].name=="Neil")
+        if(roles_[searchID].name=="Neil"&&storyChapter_[0]==0)
         {
             system("cls");
             map.SetCursorPosition(0,5);
@@ -226,20 +226,90 @@ bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)
             map.SetCursorPosition(0,5);
             PrintStoryLine_(4,Name);
             player.money+=200;
+            storyChapter_[0]=1;
         }
-        else if(roles_[searchID].name=="Orphan")
+        else if(roles_[searchID].name=="Orphan"&&storyChapter_[1]==0)
         {
             player.storyline[4]=0;
             player.storyline[5]=1;
             system("cls");
             map.SetCursorPosition(0,5);
             PrintStoryLine_(5,Name);
-            player.money+=200;
+            player.money-=250;
 
         }
-        else if(roles_[searchID].name=="Persia"&&player.storyline[5])
+        else if(roles_[searchID].name=="Persia")
+        {
+            if(player.storyline[5])
+            {
+                map.SetCursorPosition(35,start+3);
+                cout<<"輸入...>";
+                cin>>str;
+                getchar();
+                if(str=="Erick")
+                {
+                    player.storyline[5]=0;
+                    player.storyline[6]=1;
+                    system("cls");
+                    map.SetCursorPosition(0,5);
+                    PrintStoryLine_(6,Name);
+                }
+                else return false;
+            }
+            else if(player.storyline[7])
+            {
+                player.storyline[7]=0;
+                player.storyline[8]=1;
+                system("cls");
+                map.SetCursorPosition(0,5);
+                PrintStoryLine_(8,Name);
+
+            }
+            else return false;
+        }
+        else if(roles_[searchID].name=="Christine")
         {
 
+            if(player.storyline[6])
+            {
+                map.SetCursorPosition(35,start+3);
+                cout<<"輸入...>";
+                cin>>str;
+                getchar();
+                if(str=="MusicAngel")
+                {
+                    player.storyline[6]=0;
+                    player.storyline[7]=1;
+                    system("cls");
+                    map.SetCursorPosition(0,5);
+                    PrintStoryLine_(7,Name);
+                }
+                else return false;
+            }
+            else if(player.storyline[9])
+            {
+                player.storyline[9]=0;
+                player.storyline[10]=1;
+                storyChapter_[1]=1;
+                system("cls");
+                map.SetCursorPosition(0,5);
+                PrintStoryLine_(10,Name);
+                map.map_[2][12]=0;
+            }
+            else return false;
+        }
+        else if(roles_[searchID].name=="CleaningStaff"&&player.storyline[8]&&trigger_==53)
+        {
+            player.storyline[8]=0;
+            player.storyline[9]=1;
+            system("cls");
+            map.SetCursorPosition(0,5);
+            PrintStoryLine_(9,Name);
+        }
+        else if(roles_[searchID].name=="EndStory"&&trigger_==14&&player.storyline[10])
+        {
+            system("cls");
+            EndStory();
         }
         else return false;
         cout<<endl<<endl<<"\t\t\t\t\t";
@@ -272,9 +342,13 @@ void Game::Role2Talk_(int searchID,std::string Name)
         map.SetCursorPosition(35,start-2);
         cout<<Name;
         map.SetCursorPosition(35,start);
-        if(player.storyline[2]==1&&roles_[searchID].name=="Neil")
+        if(player.storyline[2]&&roles_[searchID].name=="Neil")
         {
-            cout<<"任務達成了?"<<endl;
+            cout<<"任務達成了？"<<endl;
+        }
+        else if(player.storyline[7]&&roles_[searchID].name=="Persia")
+        {
+            cout<<"克莉絲汀叫你問我艾瑞克的事？"<<endl;
         }
         else
         {
@@ -344,6 +418,7 @@ void Game::Role2Talk_(int searchID,std::string Name)
 enum Location {NUL,SQUARE,CHURCH,CONCERTHALL,BAR,MAZE};
 void Game::RoleSearchDisplay(const int trigger)
 {
+    trigger_=trigger;
     string roleName;
     string Name;
     switch(map.mapNum)
@@ -401,7 +476,7 @@ void Game::RoleSearchDisplay(const int trigger)
         else if(trigger==14)
         {
             roleName="EndStory";
-            Name="迷宮";
+            Name="音樂廳地下室";
         }
         break;
     case BAR:
@@ -453,20 +528,19 @@ void Game::BgMusic(const int triggerNum)
         break;
     }
 }
-void Game::Trigger(const int triggerNum,std::queue<std::string> *q) const
+void Game::EndStory()
 {
-    std::stringstream ss;
-    ss<<triggerNum;
-    std::string file="game"+ss.str()+".txt";
-    std::fstream gFile;
-    gFile.open(file,std::fstream::in);
-    if(gFile)
-    {
-        std::string str;
-        while(getline(gFile,str))
-        {
-            q->push(str);
-        }
-    }
+
+
+
+
+
+
+
+
+
+
+
 }
+
 

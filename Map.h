@@ -17,8 +17,7 @@ public:
     int Keyboard();
     int xPos=0,yPos=0;
     int mapNum=1;//1:square 2:church 3:Concert Hall 4:bar 5:maze
+        constexpr static int mapRow_=16,mapCol_=32;
     bool GetMap();
-private:
-    constexpr static int mapRow_=16,mapCol_=32;
     int map_[mapRow_][mapCol_];
 };

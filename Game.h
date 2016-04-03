@@ -23,15 +23,16 @@ public:
     void PrintRole();
     void Sound(const std::string s );
     void BgMusic(const int triggerNum);
-    void Trigger(const int triggerNum,std::queue<std::string> *q) const;
     std::string GetTrigger();
     void RoleSearchDisplay(const int trigger);
+    void EndStory();
     Map map;
     Player player;
     char tmp[64];
     time_t t = time(0);
 private:
     int trigger_=1;
+    int storyChapter_[2]={0};
     Player record_[10];//讀檔玩家紀錄，最多十筆
     int numChar_=0;
     Character roles_[20];

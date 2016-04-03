@@ -75,7 +75,6 @@ int main()
     while(GameRun)
     {
         int trigger=game.map.Keyboard();
-
         game.RoleSearchDisplay(trigger);
 
         map.SetCursorPosition(0,15);
@@ -146,7 +145,7 @@ int main()
                         }
                         else mapSelect=game.map.mapNum;
                     }
-                    else game.map.mapNum=mapSelect;
+                    else if(mapSelect>=1&&mapSelect<=4)game.map.mapNum=mapSelect;
                     game.map.GetMap();
                     game.BgMusic(game.map.mapNum);
                     break;
@@ -197,6 +196,7 @@ int main()
             map.SetCursorPosition(36,4);
             cout<<"[位置] "<<game.MapName();
             map.SetCursorPosition(0,0);
+            if(game.player.storyline[10]) game.map.map_[2][12]=0;
             game.map.PrintMap();
         }
 
