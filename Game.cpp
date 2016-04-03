@@ -298,7 +298,7 @@ bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)//
             }
             else return false;
         }
-        else if(roles_[searchID].name=="CleaningStaff"&&player.storyline[8]&&trigger_==53)
+        else if(roles_[searchID].name=="CleaningStaff"&&trigger_==53)//&&player.storyline[8]
         {
             player.storyline[8]=0;
             player.storyline[9]=1;
@@ -363,10 +363,10 @@ void Game::Role2Talk_(int searchID,std::string Name)
             }
         }
         map.SetCursorPosition(35,start+2);
-        char answer='\0';
         cout<<"※ 是否要對話或答應他？[Y/Enter(N)]...>";
+        char answer='\0';
         answer=getchar();
-        string str;
+        string str,ans;
         if(answer=='Y')
         {
             if(roles_[searchID].name=="Newspaper")
@@ -396,6 +396,8 @@ void Game::Role2Talk_(int searchID,std::string Name)
                 system("pause");
             }
         }
+        else if(answer=='\n') {}
+        else cin>>ans;
         map.SetCursorPosition(35,counttmp-2);
         cout<<"                              ";
         for(int i=0; i<roles_[searchID].word[tmpnum].length(); ++i)
@@ -530,17 +532,74 @@ void Game::BgMusic(const int triggerNum)
 }
 void Game::EndStory()
 {
-
-
-
-
-
-
-
-
-
-
-
+    map.SetCursorPosition(5,10);
+    cout<<"克莉絲汀：這裡是他設置的迷宮...";
+    Sleep(3500);
+    map.SetCursorPosition(5,10);
+    cout<<"                                                        ";
+    map.SetCursorPosition(5,10);
+    cout<<"克莉絲汀：注意腳邊的繩索，若被繩鎖套住，越掙扎會越緊的！";
+    Sleep(5000);
+    map.SetCursorPosition(5,10);
+    cout<<"                                                          ";
+    map.SetCursorPosition(5,10);
+    cout<<"克莉絲汀：他就是這樣將人吊死的.....！！！";
+    Sleep(4500);
+    map.SetCursorPosition(5,10);
+    cout<<"                                                        ";
+    Sleep(3000);
+    map.SetCursorPosition(5,10);
+    cout<<"艾瑞克：親愛的克莉絲汀，妳終於來了！";
+    Sleep(4000);
+    map.SetCursorPosition(5,10);
+    cout<<"                                                        ";
+    map.SetCursorPosition(5,10);
+    cout<<"艾瑞克：不用擺出那麼驚恐的表情";
+    Sleep(4000);
+    map.SetCursorPosition(5,10);
+    cout<<"                                                        ";
+    map.SetCursorPosition(5,10);
+    cout<<"艾瑞克：是為了救勞爾夏尼嗎？哈哈哈";
+    Sleep(4000);
+    map.SetCursorPosition(5,10);
+    cout<<"                                                        ";
+    map.SetCursorPosition(5,10);
+    cout<<"艾瑞克：想救他可以，但妳要先走出迷宮";
+    Sleep(4000);
+    map.SetCursorPosition(5,10);
+    cout<<"                                                        ";
+    map.SetCursorPosition(5,10);
+    cout<<"艾瑞克：順便告訴妳，若在50秒走不出去，妳就會活活被淹死！";
+    Sleep(5500);
+    map.SetCursorPosition(5,10);
+    cout<<"                                                        ";
+    map.SetCursorPosition(5,10);
+    cout<<"艾瑞克：準備好開始這場遊戲了嗎？哈哈哈哈哈！";
+    Sleep(3500);
+    map.SetCursorPosition(5,13);
+    system("pause");
+    system("cls");
+    map.mapNum=5;
+    map.GetMap();
+    map.PrintMap();
+    clock_t t1;
+    t1=clock();
+    while(map.Keyboard()!=31)
+    {
+        clock_t t2=clock();
+        double t=(t2-t1)/(double)(CLOCKS_PER_SEC);
+        map.SetCursorPosition(35,6);
+        cout<<t;
+        if(t>=50)
+        {
+            system("cls");
+            map.SetCursorPosition(10,10);
+            cout<<"You lose";
+            exit(1);
+        }
+        map.SetCursorPosition(0,15);
+        system("pause>nul");
+    }
 }
 
 
