@@ -58,7 +58,7 @@ void  Game::Introduction()
     map.SetCursorPosition(10,10);
     cout<<"廣場聽說有許多情報，幫我打聽，由衷感謝您的協助。";
     map.SetCursorPosition(10,12);
-    cout<<"                  Best,雷斯垂德. 12/7 Wes"<<endl<<endl;
+    cout<<"                  Best,雷斯垂德. 12/7 星期三"<<endl<<endl;
     map.SetCursorPosition(10,15);
     system("pause");
     system("cls");
@@ -112,6 +112,20 @@ int Game::GameLoad()
             numChar_++;
         }
         charfp.close();
+        fstream newsf;
+        newsf.open("News.txt",fstream::in);
+        if(newsf)
+        {
+            int count=0;
+            string strtmp;
+            while(getline(newsf,strtmp))
+            {
+                player.newspaper[count/3][count%3]=strtmp;
+                count++;
+            }
+            newsf.close();
+        }
+        else return 0;
         return 1;
     }
     return 0;
@@ -127,9 +141,125 @@ void Game::PrintRole()
         }
     }
 }
-bool Game::StoryLine_(int searchID,std::string Name,std::string str)
+void Game::PrintStoryLine_(int id,std::string Name)
 {
-    return true;
+    cout<<"\t\t"<<Name<<endl;
+    int length=player.story[id].length();
+    for(int i=0; i<length; ++i)
+    {
+        if(i%36==0)
+        {
+            cout<<endl;
+            cout<<"\t\t";
+        }
+        cout<<player.story[id][i];
+    }
+
+}
+bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)
+{
+    fstream fp;
+    fp.open("Storyline.txt",fstream::in);
+    if(fp)
+    {
+        string strtmp;
+        int count=0;
+        while(getline(fp,strtmp))
+        {
+            player.story[count]=strtmp;
+            count++;
+        }
+        fp.close();
+        if(roles_[searchID].name=="Neil")
+        {
+            system("cls");
+            map.SetCursorPosition(0,5);
+            if(player.storyline[2]!=1)
+            {
+                player.storyline[0]=1;
+                PrintStoryLine_(0,Name);
+            }
+            else
+            {
+                player.storyline[2]=0;
+                player.storyline[3]=1;
+                PrintStoryLine_(3,Name);
+            }
+        }
+        else if(roles_[searchID].name=="Gypsy"&&player.storyline[0])
+        {
+            map.SetCursorPosition(35,start+3);
+            cout<<"輸入...>";
+            cin>>str;
+            getchar();
+            if(str=="Help")
+            {
+                system("cls");
+                map.SetCursorPosition(0,5);
+                player.storyline[0]=0;
+                player.storyline[1]=1;
+                PrintStoryLine_(1,Name);
+            }
+            else return false;
+        }
+        else if(roles_[searchID].name=="Sherlock"&&player.storyline[1])
+        {
+            map.SetCursorPosition(35,start+3);
+            cout<<"輸入...>";
+            cin>>str;
+            getchar();
+            if(str=="Revolver")
+            {
+                system("cls");
+                map.SetCursorPosition(0,5);
+                player.storyline[1]=0;
+                player.storyline[2]=1;
+                PrintStoryLine_(2,Name);
+            }
+            else return false;
+        }
+        else if(roles_[searchID].name=="Lestrade"&&player.storyline[3])
+        {
+            player.storyline[3]=0;
+            player.storyline[4]=1;
+            system("cls");
+            map.SetCursorPosition(0,5);
+            PrintStoryLine_(4,Name);
+            player.money+=200;
+        }
+        else if(roles_[searchID].name=="Orphan")
+        {
+            player.storyline[4]=0;
+            player.storyline[5]=1;
+            system("cls");
+            map.SetCursorPosition(0,5);
+            PrintStoryLine_(5,Name);
+            player.money+=200;
+
+        }
+        else if(roles_[searchID].name=="Persia"&&player.storyline[5])
+        {
+
+        }
+        else return false;
+        cout<<endl<<endl<<"\t\t\t\t\t";
+        system("pause");
+        system("cls");
+        map.SetColor(14,0);
+        map.SetCursorPosition(36,1);
+        cout<<"開始時間 :";
+        strftime( tmp, sizeof(tmp), "%Y/%m/%d %X %A",localtime(&t) );
+        puts( tmp );
+        map.SetCursorPosition(36,2);
+        cout<<"[玩家] "<<player.name<<endl;
+        map.SetCursorPosition(36,3);
+        cout<<"[目標] "<<"1.賺錢、蒐集情報 2.找到勞爾夏尼子爵";
+        map.SetCursorPosition(36,4);
+        cout<<"[位置] "<<MapName();
+        map.SetCursorPosition(0,0);
+        map.PrintMap();
+        return true;
+    }
     return false;
 }
 void Game::Role2Talk_(int searchID,std::string Name)
@@ -142,22 +272,56 @@ void Game::Role2Talk_(int searchID,std::string Name)
         map.SetCursorPosition(35,start-2);
         cout<<Name;
         map.SetCursorPosition(35,start);
-        for(int i=0; i<roles_[searchID].word[tmpnum].length(); ++i)
+        if(player.storyline[2]==1&&roles_[searchID].name=="Neil")
         {
-            cout<<roles_[searchID].word[tmpnum][i];
-            if(i%33==0)
+            cout<<"任務達成了?"<<endl;
+        }
+        else
+        {
+            for(int i=0; i<roles_[searchID].word[tmpnum].length(); ++i)
             {
-                start++;
-                map.SetCursorPosition(35,start);
+                cout<<roles_[searchID].word[tmpnum][i];
+                if(i%33==0)
+                {
+                    start++;
+                    map.SetCursorPosition(35,start);
+                }
             }
         }
         map.SetCursorPosition(35,start+2);
         char answer='\0';
-        cout<<"是否要對話或答應他？[Y/Enter(N)]...>";
+        cout<<"※ 是否要對話或答應他？[Y/Enter(N)]...>";
         answer=getchar();
         string str;
-        map.SetCursorPosition(35,start+3);
-        if(answer=='Y'){if(StoryLine_(searchID,Name,str)){cout<<"輸入...>";cin>>str;getchar();}}
+        if(answer=='Y')
+        {
+            if(roles_[searchID].name=="Newspaper")
+            {
+
+                if(player.buyNumNews<5)
+                {
+                    map.SetCursorPosition(35,start+5);
+                    cout<<Name<<":感謝購買，請至玩家資料箱查看";
+                    player.buyNumNews++;
+                    player.money-=10;
+                }
+                else
+                {
+                    map.SetCursorPosition(35,start+5);
+                    cout<<Name<<":報紙已售完...";
+                }
+                map.SetCursorPosition(35,start+6);
+                system("pause");
+
+            }
+            else if(!StoryLine_(searchID,Name,str,start))
+            {
+                map.SetCursorPosition(35,start+5);
+                cout<<Name<<":好像沒什麼要說的吧？";
+                map.SetCursorPosition(35,start+6);
+                system("pause");
+            }
+        }
         map.SetCursorPosition(35,counttmp-2);
         cout<<"                              ";
         for(int i=0; i<roles_[searchID].word[tmpnum].length(); ++i)
@@ -170,13 +334,14 @@ void Game::Role2Talk_(int searchID,std::string Name)
                 map.SetCursorPosition(35, counttmp);
             }
         }
-        map.SetCursorPosition(35,counttmp+2);
-        cout<<"                                             ";
-        map.SetCursorPosition(35,counttmp+3);
-        cout<<"                                             ";
+        for(int i=2; i<=6; ++i)
+        {
+            map.SetCursorPosition(35,counttmp+i);
+            cout<<"                                             ";
+        }
     }
 }
-enum Location{NUL,SQUARE,CHURCH,CONCERTHALL,BAR,MAZE};
+enum Location {NUL,SQUARE,CHURCH,CONCERTHALL,BAR,MAZE};
 void Game::RoleSearchDisplay(const int trigger)
 {
     string roleName;
@@ -184,24 +349,72 @@ void Game::RoleSearchDisplay(const int trigger)
     switch(map.mapNum)
     {
     case SQUARE:
-        if(trigger==4) {roleName="Vendor";Name="蔬果攤販";}
-        else if(trigger==5) {roleName="Sherlock";Name="夏洛克福爾摩斯";}
-        else if(trigger==6) {roleName="Newspaper";Name="賣報小童";}
+        if(trigger==4)
+        {
+            roleName="Vendor";
+            Name="蔬果攤販";
+        }
+        else if(trigger==5)
+        {
+            roleName="Sherlock";
+            Name="夏洛克福爾摩斯";
+        }
+        else if(trigger==6)
+        {
+            roleName="Newspaper";
+            Name="賣報小童";
+        }
         break;
     case CHURCH:
-        if(trigger==4) {roleName="Orphan";Name="孤兒";}
-        else if(trigger==5) {roleName="Gypsy";Name="吉普賽人";}
-        else if(trigger==6) {roleName="Persia";Name="波斯人";}
-        else if(trigger==21) {roleName="Lestrade";Name="雷斯垂德警探";}
+        if(trigger==4)
+        {
+            roleName="Orphan";
+            Name="孤兒";
+        }
+        else if(trigger==5)
+        {
+            roleName="Gypsy";
+            Name="吉普賽人";
+        }
+        else if(trigger==6)
+        {
+            roleName="Persia";
+            Name="波斯人";
+        }
+        else if(trigger==21)
+        {
+            roleName="Lestrade";
+            Name="雷斯垂德警探";
+        }
         break;
     case CONCERTHALL:
-        if(trigger>=49&&trigger<=54) {roleName="CleaningStaff";Name="包廂清潔工";}
-        else if(trigger==5) {roleName="Christine";Name="克莉絲汀";}
-        else if(trigger==14) {roleName="EndStory";Name="迷宮";}
+        if(trigger>=49&&trigger<=54)
+        {
+            roleName="CleaningStaff";
+            Name="包廂清潔工";
+        }
+        else if(trigger==5)
+        {
+            roleName="Christine";
+            Name="克莉絲汀";
+        }
+        else if(trigger==14)
+        {
+            roleName="EndStory";
+            Name="迷宮";
+        }
         break;
     case BAR:
-        if(trigger==5) {roleName="Neil";Name="尼爾公爵";}
-        else if(trigger==6) {roleName="Drink";Name="酒客";}
+        if(trigger==5)
+        {
+            roleName="Neil";
+            Name="尼爾公爵";
+        }
+        else if(trigger==6)
+        {
+            roleName="Drink";
+            Name="酒客";
+        }
         break;
     case MAZE:
         break;
@@ -211,7 +424,7 @@ void Game::RoleSearchDisplay(const int trigger)
 }
 int Game::SearchID_(std::string name)
 {
-    for(int i=0;i<numChar_;++i)
+    for(int i=0; i<numChar_; ++i)
     {
         if(roles_[i].name==name) return i;
     }

@@ -56,12 +56,10 @@ int main()
     queue<string> q;
     map.SetCursorPosition(0,0);
     game.Introduction();
-    char tmp[64];
-    time_t t = time(0);
     map.SetCursorPosition(36,1);
     cout<<"開始時間 :";
-    strftime( tmp, sizeof(tmp), "%Y/%m/%d %X %A",localtime(&t) );
-    puts( tmp );
+    strftime( game.tmp, sizeof(game.tmp), "%Y/%m/%d %X %A",localtime(&game.t) );
+    puts( game.tmp );
     map.SetCursorPosition(36,2);
     cout<<"[玩家] "<<game.player.name<<endl;
     map.SetCursorPosition(36,3);
@@ -105,14 +103,28 @@ int main()
                         <<"\t\t金錢 : "<<game.player.money<<" 英鎊"<<endl<<endl
                         <<"\t\t";
                     map.SetColor(0,13);
-                    cout<<"[道具箱]"<<endl<<endl;
-                    map.SetColor(13,0);
-                    cout<<"\t\t";
-                    map.SetColor(0,13);
                     cout<<"[情報箱]"<<endl<<endl;
                     map.SetColor(13,0);
-
-
+                    for(int i=0; i<game.player.buyNumNews; ++i)
+                    {
+                        for(int j=0; j<3; j++)
+                        {
+                            if(j==2)
+                            {
+                                for(int k=0; k<game.player.newspaper[i][j].length(); ++k)
+                                {
+                                    if(k%36==0)
+                                    {
+                                        cout<<endl;
+                                        cout<<"\t\t";
+                                    }
+                                    cout<<game.player.newspaper[i][j][k];
+                                }
+                            }
+                            else cout<<"\t\t"<<game.player.newspaper[i][j]<<endl;
+                        }
+                        cout<<endl<<"\t\t------------------------------------"<<endl;
+                    }
                     break;
                 case 2:
 
@@ -161,7 +173,7 @@ int main()
                 map.SetColor(6,0);
                 cout<<"\t\t※提示：遊戲當中長按 [空白鍵]能知道目前經過時間"<<endl<<endl;
                 cout<<"\t\t[選項]"<<endl<<endl
-                    <<"\t\t(1) 道具及情報箱 "<<endl
+                    <<"\t\t(1) 玩家資料箱 "<<endl
                     <<"\t\t(2) 地圖移轉"<<endl
                     <<"\t\t(3) 儲存檔案或離開遊戲"<<endl
                     <<"\t\t(4) 回到遊戲"<<endl<<endl
@@ -176,8 +188,8 @@ int main()
             map.SetColor(14,0);
             map.SetCursorPosition(36,1);
             cout<<"開始時間 :";
-            strftime( tmp, sizeof(tmp), "%Y/%m/%d %X %A",localtime(&t) );
-            puts( tmp );
+            strftime( game.tmp, sizeof(game.tmp), "%Y/%m/%d %X %A",localtime(&game.t) );
+            puts( game.tmp );
             map.SetCursorPosition(36,2);
             cout<<"[玩家] "<<game.player.name<<endl;
             map.SetCursorPosition(36,3);

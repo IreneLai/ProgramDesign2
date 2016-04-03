@@ -14,8 +14,8 @@
 class Game
 {
 public:
-    Game(){}
-    ~Game(){}
+    Game() {}
+    ~Game() {}
     int  Option();
     void Introduction();
     std::string MapName();
@@ -28,6 +28,8 @@ public:
     void RoleSearchDisplay(const int trigger);
     Map map;
     Player player;
+    char tmp[64];
+    time_t t = time(0);
 private:
     int trigger_=1;
     Player record_[10];//讀檔玩家紀錄，最多十筆
@@ -35,7 +37,8 @@ private:
     Character roles_[20];
     int SearchID_(std::string name);
     void Role2Talk_(int searchID,std::string Name);
-    bool StoryLine_(int searchID,std::string Name,std::string str);
+    bool StoryLine_(int searchID,std::string Name,std::string str,int start);
+    void PrintStoryLine_(int id,std::string Name);
 
 
 };
