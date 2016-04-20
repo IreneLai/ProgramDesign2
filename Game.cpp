@@ -306,6 +306,56 @@ bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)//
             map.SetCursorPosition(0,5);
             PrintStoryLine_(9,Name);
         }
+        else if(roles_[searchID].name=="Drink")
+        {
+            system("cls");
+            map.SetColor(7,0);
+            cout<<"來，我們來玩遊戲吧！看看誰能賺到錢！！！"<<endl<<endl;
+            int tmp=rand()%3;
+            map.SetColor(6,0);
+            map.SetColor(13,0);
+            switch(tmp)
+            {
+            case 0:
+                if(player.GuessDigits())
+                {
+                    cout<<"你贏了 40 元"<<endl;
+                    player.money+=40;
+                }
+                else
+                {
+                    cout<<"你輸了 20 元"<<endl;
+                    player.money-=20;
+                }
+                break;
+            case 1:
+                if(player.PaperScissorRock())
+                {
+                    cout<<"你贏了 20 元"<<endl;
+                    player.money+=20;
+                }
+                else
+                {
+                    cout<<"你輸了 10 元"<<endl;
+                    player.money-=10;
+                }
+                break;
+            case 2:
+                if(player.NumGuess())
+                {
+                    cout<<"你贏了 30 元"<<endl;
+                    player.money+=30;
+                }
+                else
+                {
+                    cout<<"你輸了 15 元"<<endl;
+                    player.money-=15;
+                }
+                break;
+            }
+            map.SetColor(7,0);
+            cout<<endl<<"歡迎再來賭一把啊！"<<endl;
+        }
         else if(roles_[searchID].name=="EndStory"&&trigger_==14&&player.storyline[10])
         {
             system("cls");
@@ -396,8 +446,6 @@ void Game::Role2Talk_(int searchID,std::string Name)
                 system("pause");
             }
         }
-        else if(answer=='\n') {}
-        else cin>>ans;
         map.SetCursorPosition(35,counttmp-2);
         cout<<"                              ";
         for(int i=0; i<roles_[searchID].word[tmpnum].length(); ++i)
@@ -528,58 +576,32 @@ void Game::BgMusic(const int triggerNum)
     case 4:
         Sound("Afterschool");
         break;
+    case 5:
+        Sound("Phantom");
+        break;
     }
 }
 void Game::EndStory()
 {
-    map.SetCursorPosition(5,10);
-    cout<<"克莉絲汀：這裡是他設置的迷宮...";
-    Sleep(3500);
-    map.SetCursorPosition(5,10);
-    cout<<"                                                        ";
-    map.SetCursorPosition(5,10);
-    cout<<"克莉絲汀：注意腳邊的繩索，若被繩鎖套住，越掙扎會越緊的！";
-    Sleep(5000);
-    map.SetCursorPosition(5,10);
-    cout<<"                                                          ";
-    map.SetCursorPosition(5,10);
-    cout<<"克莉絲汀：他就是這樣將人吊死的.....！！！";
-    Sleep(4500);
-    map.SetCursorPosition(5,10);
-    cout<<"                                                        ";
-    Sleep(3000);
-    map.SetCursorPosition(5,10);
-    cout<<"艾瑞克：親愛的克莉絲汀，妳終於來了！";
-    Sleep(4000);
-    map.SetCursorPosition(5,10);
-    cout<<"                                                        ";
-    map.SetCursorPosition(5,10);
-    cout<<"艾瑞克：不用擺出那麼驚恐的表情";
-    Sleep(4000);
-    map.SetCursorPosition(5,10);
-    cout<<"                                                        ";
-    map.SetCursorPosition(5,10);
-    cout<<"艾瑞克：是為了救勞爾夏尼嗎？哈哈哈";
-    Sleep(4000);
-    map.SetCursorPosition(5,10);
-    cout<<"                                                        ";
-    map.SetCursorPosition(5,10);
-    cout<<"艾瑞克：想救他可以，但妳要先走出迷宮";
-    Sleep(4000);
-    map.SetCursorPosition(5,10);
-    cout<<"                                                        ";
-    map.SetCursorPosition(5,10);
-    cout<<"艾瑞克：順便告訴妳，若在50秒走不出去，妳就會活活被淹死！";
-    Sleep(5500);
-    map.SetCursorPosition(5,10);
-    cout<<"                                                        ";
-    map.SetCursorPosition(5,10);
-    cout<<"艾瑞克：準備好開始這場遊戲了嗎？哈哈哈哈哈！";
-    Sleep(3500);
+    map.mapNum=5;
+    BgMusic(map.mapNum);
+    fstream fp1;
+    fp1.open("End1.txt",fstream::in);
+    if(fp1)
+    {
+        string str;
+        while(getline(fp1,str))
+        {
+            system("cls");
+            map.SetCursorPosition(5,10);
+            cout<<str;
+            Sleep(4500);
+        }
+        fp1.close();
+    }
     map.SetCursorPosition(5,13);
     system("pause");
     system("cls");
-    map.mapNum=5;
     map.GetMap();
     map.PrintMap();
     clock_t t1;
@@ -600,6 +622,7 @@ void Game::EndStory()
         map.SetCursorPosition(0,15);
         system("pause>nul");
     }
+    system("cls");
 }
 
 
