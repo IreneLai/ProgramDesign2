@@ -1,11 +1,13 @@
 #include<time.h>
 #include"Game.h"
+#include"Record.h"
 using namespace std;
 int main()
 {
     Player player;
     Map map;
     Game game;
+    Record record;
     //START_OptionMenu
     int option=game.Option();
     if(option==0)
@@ -33,24 +35,18 @@ int main()
     }
     else if(option==1)
     {
-        map.SetCursorPosition(10,5);
-        cout<<"RECORD";
-        map.SetCursorPosition(10,6);
-        cout<<"Choose the record...>";
-        int record=0;
-        cin>>record;
+        map.SetCursorPosition(0,1);
+        record.Interface(game);
         getchar();
     }
     else exit(1);
-    if(game.GameLoad()) cout<<"\n\t\t遊戲已下載完畢，即將開始...";
+    if(game.GameLoad()) cout<<"\n\t\t遊戲已下載完畢，即將開始..."<<endl;
     else exit(1);
     // game.PrintRole();
-    map.SetCursorPosition(16,17);
+    cout<<"\t\t";
     system("pause");
     system("cls");
     map.SetColor(7,0);
-    //Start clock
-    clock();
     bool GameRun = true;
     map.Position(1,1);
     queue<string> q;
@@ -63,7 +59,7 @@ int main()
     map.SetCursorPosition(36,2);
     cout<<"[玩家] "<<game.player.name<<endl;
     map.SetCursorPosition(36,3);
-    cout<<"[目標] "<<"1.賺錢、蒐集情報 2.找到勞爾夏尼子爵";
+    cout<<"[目標] "<<"1.蒐集情報、賺錢 2.找到勞爾夏尼子爵";
     map.SetCursorPosition(36,4);
     cout<<"[位置] "<<game.MapName();
     map.SetColor(12,0);
@@ -156,7 +152,19 @@ int main()
                     map.SetColor(13,0);
                     cout<<"\t\t玩家名稱 : "<<game.player.name<<endl
                         <<"\t\t金錢 : "<<game.player.money<<endl
-                        <<"\t\t目前花費時間 : "<<clock()/CLOCKS_PER_SEC/60<<" 分 "<<clock()/CLOCKS_PER_SEC%60<<" 秒 "<<endl<<endl;
+                        <<"\t\t目前花費時間 : "<<clock()/CLOCKS_PER_SEC/60<<" 分 "<<clock()/CLOCKS_PER_SEC%60<<" 秒 "<<endl<<endl
+                        <<"\t\t請問要儲存檔案嗎[Y/N]...>";
+                    string ans;
+                    cin>>ans;
+                    if(ans=="Y")
+                    {
+                        if(record.Save(&game))
+                        {
+                            cout<<"\t\t儲存成功，請問要繼續遊戲嗎?[Y/N]...>";
+                            cin>>ans;
+                            if(ans=="N") exit(1);
+                        }
+                    }
                     break;
                 }
                 if(select!=0)
@@ -192,7 +200,7 @@ int main()
             map.SetCursorPosition(36,2);
             cout<<"[玩家] "<<game.player.name<<endl;
             map.SetCursorPosition(36,3);
-            cout<<"[目標] "<<"1.賺錢、蒐集情報 2.找到勞爾夏尼子爵";
+            cout<<"[目標] "<<"1.蒐集情報、賺錢 2.找到勞爾夏尼子爵";
             map.SetCursorPosition(36,4);
             cout<<"[位置] "<<game.MapName();
             map.SetCursorPosition(0,0);
@@ -205,14 +213,15 @@ int main()
             while(GetAsyncKeyState(VK_SPACE)!=0)
             {
                 map.SetCursorPosition(0,18);
-                int minute=clock()/CLOCKS_PER_SEC/60;
-                int second=clock()/CLOCKS_PER_SEC%60;
+                int hour=(clock()+game.player.time)/CLOCKS_PER_SEC/3600;
+                int minute=(clock()+game.player.time)/CLOCKS_PER_SEC/60;
+                int second=(clock()+game.player.time)/CLOCKS_PER_SEC%60;
                 map.SetCursorPosition(3,18);
-                std::cout<<"已經過 : "<<minute<<" 分 "<<second<<" 秒 "<<std::endl;
+                std::cout<<"已經過 : "<<hour<<" 時 "<<minute<<" 分 "<<second<<" 秒 "<<std::endl;
                 Sleep(100);
             }
             map.SetCursorPosition(3,18);
-            cout<<"                       ";
+            cout<<"                                           ";
         }
     }
     cin.get();

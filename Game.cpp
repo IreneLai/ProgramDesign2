@@ -373,7 +373,7 @@ bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)//
         map.SetCursorPosition(36,2);
         cout<<"[玩家] "<<player.name<<endl;
         map.SetCursorPosition(36,3);
-        cout<<"[目標] "<<"1.賺錢、蒐集情報 2.找到勞爾夏尼子爵";
+        cout<<"[目標] "<<"1.蒐集情報、賺錢 2.找到勞爾夏尼子爵";
         map.SetCursorPosition(36,4);
         cout<<"[位置] "<<MapName();
         map.SetCursorPosition(0,0);
@@ -415,7 +415,7 @@ void Game::Role2Talk_(int searchID,std::string Name)
         map.SetCursorPosition(35,start+2);
         cout<<"※ 是否要對話或答應他？[Y/Enter(N)]...>";
         char answer='\0';
-        answer=getchar();
+        scanf("%c",&answer);
         string str,ans;
         if(answer=='Y')
         {
@@ -595,7 +595,7 @@ void Game::EndStory()
             system("cls");
             map.SetCursorPosition(5,10);
             cout<<str;
-            Sleep(4500);
+            Sleep(2);
         }
         fp1.close();
     }
@@ -623,6 +623,48 @@ void Game::EndStory()
         system("pause>nul");
     }
     system("cls");
+    cout<<"你贏了"<<endl;
+    AddRank_();
+    Sleep(3000);
+    exit(1);
 }
+void Game::AddRank_()
+{
+    fstream fp;
+    fp.open("rank.txt",fstream::in);
+    int numRank=0;
+    vector <string> rankArr;
+    if(fp)
+    {
+        string str;
+        if(getline(fp,str))
+        {
+            istringstream ss(str);
+            ss>>numRank;
+            rankArr.clear();
+            while(getline(fp,str))
+            {
+                rankArr.push_back(str);
+            }
+        }
+        fp.close();
+    }
+    fp.open("rank.txt",ios::out | ios::trunc);
+    if(fp)
+    {
+        numRank++;
+        fp<<numRank<<endl;
+        for(int i=0; i<rankArr.size(); ++i)
+        {
+            fp<<rankArr[i]<<endl;
+        }
+        double score=(10000-clock()/10000)+player.money;
+        player.time+=clock();
+        strftime( tmp, sizeof(tmp), "%Y/%m/%d/%X/%A",localtime(&t) );
+        puts( tmp );
+        fp<<player.name<<" "<<player.money<<" "<<player.time<<" "<<score<<" "<<tmp;
+        fp.close();
+    }
 
+}
 

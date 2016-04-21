@@ -5,12 +5,15 @@
 #include<MMSystem.h>
 #include<sstream>
 #include<fstream>
-#include<queue>
+#include<vector>
 #include<time.h>
 #include <iomanip>
+#include<sstream>
 #include"Map.h"
 #include"Player.h"
 #include"Character.h"
+#ifndef GAME_H_
+#define GAME_H_
 class Game
 {
 public:
@@ -40,6 +43,7 @@ private:
     void Role2Talk_(int searchID,std::string Name);
     bool StoryLine_(int searchID,std::string Name,std::string str,int start);
     void PrintStoryLine_(int id,std::string Name);
-
-
+    void AddRank_();
 };
+
+#endif // GAME_H_

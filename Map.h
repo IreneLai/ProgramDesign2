@@ -6,6 +6,8 @@
 #include<queue>
 #include<Windows.h>
 #include<iostream>
+#ifndef MAP_H_
+#define MAP_H_
 class Map
 {
 public:
@@ -21,3 +23,4 @@ public:
     bool GetMap();
     int map_[mapRow_][mapCol_];
 };
+#endif // MAP_H_

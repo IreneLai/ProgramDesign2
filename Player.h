@@ -3,6 +3,8 @@
 #include<iostream>
 #include<stdlib.h>
 #include <stdio.h>
+#ifndef PLAYER_H_
+#define PLAYER_H_
 class Player
 {
 public:
@@ -23,3 +25,5 @@ public:
     bool NumGuess();
 
 };
+
+#endif // PLAYER_H_

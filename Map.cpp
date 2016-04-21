@@ -1,4 +1,4 @@
-#include"map.h"
+#include"Map.h"
 using namespace std;
 void Map::SetColor(int f,int b)
 {
