@@ -23,12 +23,14 @@ int main()
         map.SetCursorPosition(10,9);
         cout<<"(3) 若金錢歸零，即輸了遊戲";
         map.SetCursorPosition(10,10);
-        cout<<"(4) 查看玩家狀態請按 [Enter]，內容包括金錢、花費時間";
+        cout<<"(4) 提醒：同樣人物，對話不只一種；報紙(情報)可買多份";
         map.SetCursorPosition(10,11);
+        cout<<"(5) 查看玩家狀態請按 [Enter]，內容包括金錢、花費時間";
+        map.SetCursorPosition(10,12);
         cout<<"    可進行存檔、地圖更換、道具查看等等...";
         //Print name
         map.SetColor(11,0);
-        map.SetCursorPosition(10,13);
+        map.SetCursorPosition(10,14);
         cout<<"請輸入姓名...>";
         cin>>game.player.name;
         getchar();
@@ -86,6 +88,7 @@ int main()
             {
                 map.SetColor(13,0);
                 map.SetCursorPosition(0,5);
+                int tmp=0;
                 switch(select)
                 {
                 case 1:
@@ -137,6 +140,11 @@ int main()
                         if(makeSure=="Y")
                         {
                             game.player.money-=50;
+                            if(game.player.money<=0)
+                            {
+                                cout<<"\t\t你的錢不足，遊戲結束"<<endl;
+                                exit(1);
+                            }
                             game.map.mapNum=3;
                         }
                         else mapSelect=game.map.mapNum;
@@ -144,6 +152,8 @@ int main()
                     else if(mapSelect>=1&&mapSelect<=4)game.map.mapNum=mapSelect;
                     game.map.GetMap();
                     game.BgMusic(game.map.mapNum);
+                    tmp=1;
+
                     break;
                 case 3:
                     cout<<"\t\t";
@@ -173,6 +183,7 @@ int main()
                     system("pause");
                     system("cls");
                 }
+                if(tmp) {break;}
                 map.SetCursorPosition(0,5);
                 cout<<"\t\t ";
                 map.SetColor(0,6);

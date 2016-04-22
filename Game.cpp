@@ -48,7 +48,7 @@ void  Game::Introduction()
     map.SetCursorPosition(10,5);
     cout<<"您好, "<<player.name<<".";
     map.SetCursorPosition(10,6);
-    cout<<"歡迎來到17世紀的倫敦...";
+    cout<<"歡迎來到19世紀的倫敦...";
     map.SetCursorPosition(10,7);
     cout<<"濃霧瀰漫的市中心廣場，充斥著詭譎的氣氛，到底發生什麼事了?";
     map.SetCursorPosition(10,8);
@@ -298,7 +298,7 @@ bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)//
             }
             else return false;
         }
-        else if(roles_[searchID].name=="CleaningStaff"&&trigger_==53)//&&player.storyline[8]
+        else if(roles_[searchID].name=="CleaningStaff"&&trigger_==53&&player.storyline[8])
         {
             player.storyline[8]=0;
             player.storyline[9]=1;
@@ -354,7 +354,13 @@ bool Game::StoryLine_(int searchID,std::string Name,std::string str,int start)//
                 break;
             }
             map.SetColor(7,0);
-            cout<<endl<<"歡迎再來賭一把啊！"<<endl;
+
+            if(player.money<=0)
+            {
+                cout<<"你沒錢了...遊戲結束"<<endl;
+                exit(1);
+            }
+            else cout<<endl<<"歡迎再來賭一把啊！"<<endl;
         }
         else if(roles_[searchID].name=="EndStory"&&trigger_==14&&player.storyline[10])
         {
@@ -417,7 +423,7 @@ void Game::Role2Talk_(int searchID,std::string Name)
         char answer='\0';
         scanf("%c",&answer);
         string str,ans;
-        if(answer=='Y')
+        if(answer=='Y'||answer=='y')
         {
             if(roles_[searchID].name=="Newspaper")
             {
@@ -445,6 +451,12 @@ void Game::Role2Talk_(int searchID,std::string Name)
                 map.SetCursorPosition(35,start+6);
                 system("pause");
             }
+        }
+        else if(answer=='\n'||answer=='N'||answer=='n'){}
+        else
+        {
+            string strtmp;
+            cin>>strtmp;
         }
         map.SetCursorPosition(35,counttmp-2);
         cout<<"                              ";
@@ -595,7 +607,7 @@ void Game::EndStory()
             system("cls");
             map.SetCursorPosition(5,10);
             cout<<str;
-            Sleep(2);
+            Sleep(4000);
         }
         fp1.close();
     }
@@ -612,11 +624,11 @@ void Game::EndStory()
         double t=(t2-t1)/(double)(CLOCKS_PER_SEC);
         map.SetCursorPosition(35,6);
         cout<<t;
-        if(t>=50)
+        if(t>=30)
         {
             system("cls");
             map.SetCursorPosition(10,10);
-            cout<<"You lose";
+            cout<<"你輸了";
             exit(1);
         }
         map.SetCursorPosition(0,15);
@@ -665,6 +677,5 @@ void Game::AddRank_()
         fp<<player.name<<" "<<player.money<<" "<<player.time<<" "<<score<<" "<<tmp;
         fp.close();
     }
-
 }
 
